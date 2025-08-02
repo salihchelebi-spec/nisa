@@ -1,0 +1,83 @@
+<!-- sidepanel.html - Chrome uzantısı için ana kullanıcı arayüzü şablonu -->
+<!-- 2. HTML Yapısı: Uzantının temel iskeletini ve projenin amacını belirtir. -->
+<!DOCTYPE html>
+<!-- 3. Dil Kodu: Sayfanın birincil dilini Türkçe olarak belirtir. -->
+<html lang="tr">
+<head>
+    <!-- 4. Karakter Seti: Sayfanın doğru bir şekilde görüntülenmesi için UTF-8 karakter kodlaması. -->
+    <meta charset="UTF-8">
+    <!-- 5. Viewport: Uzantının farklı ekran boyutlarına (mobil dahil) uyum sağlamasını sağlar. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 6. Başlık: Uzantının başlığını ayarlar. -->
+    <title>Ajan Nil</title>
+
+    <!-- 7. Dış Kaynaklar - CSS: Tailwind CSS CDN'i ile modern stilizasyon. -->
+    <!-- 18. Uzantı Uyumluğu: Bu kaynaklar için manifest.json'da izin tanımlanmalıdır. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 8. Dış Kaynaklar - Font: Estetik ve okunabilirlik için Inter yazı tipi. -->
+    <!-- 13. Yazı Tipi: font-display=swap parametresi, fontun yüklenmesi sırasında tarayıcının geçici bir font kullanmasını sağlar. -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 20. Minimalist Yapı: Bu stil bloğu sadece panelin temel iskeleti ve tema değişiklikleri için kullanılır. */
+        /* Geri kalan stiller Tailwind CSS tarafından yönetilir. */
+
+        /* 11. Genişlik ve Yükseklik, 12. Arkaplan Rengi, 13. Yazı Tipi, 14. Kenar Boşlukları: Temel stiller. */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 400px;
+            min-height: 600px;
+            background-color: #f3f4f6;
+        }
+        
+        /* 15. Koyu Tema Desteği: Koyu tema etkinleştirildiğinde uygulanacak arkaplan rengi. */
+        .dark body {
+            background-color: #111827;
+        }
+        
+        /* 12. Arkaplan Renkleri: Erişilebilirlik için yüksek kontrastlı bir tema seçeneği. */
+        .high-contrast body {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* 16. Scrollbar Tasarımı: Kullanıcı deneyimini iyileştirmek için özelleştirilmiş kaydırma çubuğu. */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #6b7280;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <!-- 9. Ana Konteyner: React uygulamasının yükleneceği ana div elementi. -->
+    <!-- 21. Vurgu: Kodun en önemli kısmını vurgular. -->
+    <div id="root"></div>
+
+    <!-- 10. JavaScript Bağlantısı: React uygulamasının derlenmiş JavaScript dosyasının yolu. -->
+    <!-- 18. Uzantı Uyumluğu: manifest.json'daki web_accessible_resources ile uyumlu olmalıdır. -->
+    <!-- 19. Geliştirme ve Üretim Ortamı: Bu dosyanın bir build aşamasından sonra oluşacağı notu. -->
+    <script src="/dist/bundle.js"></script>
+</body>
+</html>
