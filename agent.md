@@ -619,38 +619,79 @@ locales/ klasörü tüm UI componentleriyle, sidepanel.html, popup.html ve optio
 utils/ klasörü, components/, storage.js, background.js, options.js ve diğer tüm JS dosyalarında import edilir. Locales, styles ve assets ile doğrudan bağlantısı yoktur.
 ---
 ## 12. **assets/** Klasörü için 30 Talimat
-1. Tüm görsel dosyalar, ikonlar ve logolar burada tutulur.
-2. Bayrak, mikrofon, ayarlar dişlisi, kullanıcı avatarı gibi simgeler bu klasöre konur.
-3. Klasör içinde icons/, logos/, illustrations/ gibi alt klasörler olabilir.
-4. Her görsel, uygun çözünürlükte (16, 48, 128px) olmalıdır.
-5. Kullanılan tüm görsellerin telif hakları kontrol edilmelidir.
-6. Panel, popup ve options arayüzü buradaki görselleri kullanır.
-7. Onboarding rehberi veya yardım videoları burada saklanabilir.
-8. Temaya özel ikon varyantları (açık/koyu) eklenebilir.
-9. Dil/ülke bazlı farklı bayrak ikonları bulundurulabilir.
-10. React/Svelte componentlerinde import edilerek kullanılmalıdır.
-11. Derleme sırasında optimize ve sıkıştırma yapılmalıdır.
-12. SVG formatı tercih edilmelidir; gerekirse PNG/jpg alternatifler olabilir.
-13. Tüm logolar ve markalama görselleri bu klasörde tutulur.
-14. Arayüzde gösterilen her tür medya (audio, video) burada yer alabilir.
-15. Performans için dosya adları kısa ve açıklayıcı olmalıdır.
-16. Her bir asset, dosya sistemi veya CDN üzerinden çağrılabilir.
-17. UI/UX ekibi tarafından kolayca güncellenebilir olmalıdır.
-18. Dosya değişikliklerinde sürüm kontrolü yapılmalıdır.
-19. Proje build sırasında gereksiz dosyalar hariç tutulmalıdır.
-20. Gerekirse müşteriye özel asset alt klasörleri olabilir.
-21. Alt klasörlerle (örn: en/icons/, fr/icons/) dil bazlı varyantlar eklenebilir.
-22. CSS’de asset yoluna göre import yapılır.
-23. Favicon, manifest ve panel ikonları burada bulunmalıdır.
-24. Kullanıcıya sunulan onboarding illüstrasyonları burada olabilir.
-25. Media query ile farklı çözünürlük için uygun görsel otomatik yüklenmelidir.
-26. SVG animasyonlu ikonlar için ayrı klasör açılabilir.
-27. Marka ile ilgili kurumsal renkler ve logo alternatifleri yer alır.
-28. Dosya erişimi mümkün olduğunca hızlı olmalı.
-29. Assets/ klasörü production build’e otomatik dahil edilmelidir.
-30. Gereksiz medya dosyaları build’den hariç tutulmalıdır.
-**Bağlantı ve iletişim:**
-assets/ klasörü doğrudan UI componentleri, sidepanel.html, popup.html ve options.html ile bağlantılıdır. Script dosyaları ile doğrudan ilişkisi yoktur; import/export ile UI’da gösterilir.
+
+
+## 12. **assets/** Klasörü için 30 AI Yönelik Talimat
+
+1. Her UI bölümünde kullanılan tüm ikon, logo ve medya dosyalarını assets/ klasörü altında depola.
+2. Her önemli DOM, panel veya ayar menüsü için sabit bir rakam ve 🟢 emoji ile tanımlayıcı oluştur.
+3. Tüm mapping’i `mapping.json` gibi merkezi bir dosyada numara-ikon alan eşleştirmesiyle tut.
+4. Her numaraya karşılık gelen SVG için ayrı bir upload alanı UI’da göster.
+5. Yönetici arayüzünde, SVG seçilmemişse ilgili 🟢+rakam ve alan adı önde, SVG seçilmişse SVG’nin önizlemesi göster.
+6. Her SVG yüklendiğinde ilgili numarayı/placeholder’ı otomatik olarak yeni SVG ile değiştir.
+7. Yönetici panelinde, mevcut mapping ve SVG eşleşmelerini tablo şeklinde göster.
+8. Tüm uploadlar sadece SVG formatında kabul edilmeli; diğer formatlar (PNG, JPG) opsiyonel ve ikinci planda olsun.
+9. Her SVG dosyasını yüklerken isimlendirme: `alanAdi_{numara}.svg` şeklinde olmalı.
+10. Aynı anda birden fazla SVG yüklenmesine ve güncellenmesine izin ver.
+11. Yönetici panelinde, hangi numaranın hangi UI öğesini temsil ettiğini açıkça göster (örn. 🟢1 = Ana Menü).
+12. SVG eşleştirmelerinde, mapping numaraları daima görünür olmalı (yönetim/arayüz haritalama için).
+13. Tüm mapping ve dosya ilişkilerini build aşamasında otomatik test et; eksik veya yanlış eşleşme uyarısı ver.
+14. Kullanıcı tarafında, mapping numaraları gizlenmeli, sadece atanmış SVG ikonları görünmeli.
+15. Her yeni ayar/menü için mapping.json ve UI’da yeni bir 🟢+rakam ve upload alanı ekle.
+16. Tüm assets dosyalarını alt klasörlere ayır: `/icons/`, `/flags/`, `/onboarding/`, `/logos/` gibi.
+17. Temaya özel ikonlar (light/dark) için mapping’de tema varyantı destekle (`anaMenu_light.svg`, `anaMenu_dark.svg`).
+18. Dosya yüklenirken, mevcut SVG dosyası üzerine otomatik olarak overwrite uygula; eski dosyaları sürümle.
+19. Mapping.json dosyasını UI/UX yöneticisinin kolay güncellemesi için sade ve açıklamalı tut.
+20. Build sırasında sadece atanmış ve kullanılan SVG/asset dosyalarını dahil et; gereksiz medya build’e eklenmesin.
+21. Her yeni özellik veya UI bölümü için mapping ve SVG eşleşmesi AI tarafından otomatik önerilsin.
+22. Kullanıcıya gösterilecek tüm SVG’ler, yönetici panelinde kolayca güncellenebilir ve önizlenebilir olmalı.
+23. Yüklü SVG dosyaları optimize edilerek (SVGO vb.) boyut küçültülmeli.
+24. Gerektiğinde mapping.json’a kategori veya grup bilgisi eklenerek toplu yönetim kolaylaştırılmalı.
+25. Farklı dil/bölge için farklı bayrak SVG mapping’i desteklenmeli (`flag_tr.svg`, `flag_fr.svg` gibi).
+26. Tüm upload ve değişiklikler loglanmalı, sürüm geçmişi saklanmalı.
+27. Assets klasörü, proje sürüm kontrolüne (git) tam entegre edilmeli; değişiklikler net izlenebilmeli.
+28. Kullanıcıya açık arayüzde, mapping numaraları görünmemeli; sadece yönetici panelinde ve debug’da aktif olmalı.
+29. Ayar ve ikon mapping yönetimi tamamen klavye ile erişilebilir olmalı; her rakamla hızlı seç ve yükle işlemi mümkün olmalı.
+30. Assets/ mapping sisteminde her SVG dosyasının hangi UI alanında (panel, menü, bildirim, vs.) kullanılacağı AI tarafından otomatik dokümante edilmeli.
+
+**Bağlantı ve iletişim:**  
+assets/ ve mapping sistemi, UI componentleri, sidepanel, popup ve options ile entegre çalışır.  
+SVG mapping, yönetici panelinde AI ile otomatik öneriler ve güncellemeler sağlar.  
+Kullanıcı tarafında ise sadece atanmış SVG ikonları görünür; mapping numaraları yönetim için gizlenebilir şekilde tutulur.
+---
+
+### Yönetici Girişi ve Oturum Yönetimi için AI Talimatları
+
+### Yönetici Girişi
+
+1. Yönetici paneline erişim için kullanıcı adı **xxxxx**, şifre **xxxxxxx** olarak zorunlu tutulmalıdır.
+2. İlk girişte kullanıcı adı ve şifreyi isteyen, sade ve güvenli bir login arayüzü oluştur.
+3. Giriş başarılı olursa, oturum bilgisi (örn. bir JWT, session token veya localStorage flag) **1 ay boyunca** güvenli şekilde saklanmalı; tekrar giriş istenmemeli.
+4. 1 ay dolunca, yönetici tekrar login ekranına yönlendirilmeli.
+5. Oturum kontrolü için merkezi bir JS dosyası (`adminAuth.js` gibi) oluşturulabilir; burada giriş, oturum saklama, otomatik süresi dolmuş kontrolü yönetilir.
+6. Her admin fonksiyonu çağrısında, geçerli oturum kontrol edilmeli; yoksa login ekranı tetiklenmeli.
+7. Şifre ve kullanıcı adı arayüzde maskelenmeli; yanlış girişte açık hata mesajı gösterilmeli.
+8. Oturum, localStorage/sessionStorage’da şifrelenmiş veya hash’lenmiş şekilde tutulmalı.
+9. Oturum süresince admin ayarları, mapping upload ve yönetim paneli erişimi aktif olur.
+10. Güvenlik için, 1 ay dolmadan admin elle çıkış yapmak isterse “Oturumu Kapat” butonu sunulmalı ve token silinmelidir.
+11. Giriş ekranı ve oturum yönetimi sadece assets yönetici panelinde görünür olmalıdır; kullanıcıya hiçbir şekilde gösterilmemelidir.
+12. Oturum kimliği yalnızca assets yönetimi ve mapping işlemlerinde kontrol edilir; diğer uygulama alanları için kullanılmaz.
+
+**Not:**  
+Bu sistem ile yönetici bir kere giriş yaptıktan sonra, bir ay boyunca tekrar login olmadan mapping ve SVG yönetim panelini tam erişimle kullanabilir.
+
+**Bağlantı ve iletişim:**  
+Yönetici giriş ve oturum sistemi yalnızca **assets yönetim paneli** ile bağlantılıdır;  
+login ve oturum kontrolü, tüm SVG mapping ve upload işlemlerinde aktif olur.  
+Oturum bilgisi sadece assets panelinde kontrol edilir, diğer uygulama fonksiyonları ile paylaşılmaz.  
+Giriş doğrulama ve oturum süresi yönetimi için genellikle ayrı bir JS dosyası (`adminAuth.js`) kullanılır  
+ve bu dosya yalnızca yöneticiye özel işlemler için import edilir.
+
+---
+
+
+---
+
 ---
 ## 13. **README.md ve Dökümantasyon** için 30 Talimat
 1. Projenin kısa tanımı ve temel amacı burada yazılmalıdır.
