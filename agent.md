@@ -681,11 +681,11 @@ Kullanıcı tarafında ise sadece atanmış SVG ikonları görünür; mapping nu
 Bu sistem ile yönetici bir kere giriş yaptıktan sonra, bir ay boyunca tekrar login olmadan mapping ve SVG yönetim panelini tam erişimle kullanabilir.
 
 **Bağlantı ve iletişim:**  
-Yönetici giriş ve oturum sistemi yalnızca **assets yönetim paneli** ile bağlantılıdır;  
-login ve oturum kontrolü, tüm SVG mapping ve upload işlemlerinde aktif olur.  
-Oturum bilgisi sadece assets panelinde kontrol edilir, diğer uygulama fonksiyonları ile paylaşılmaz.  
-Giriş doğrulama ve oturum süresi yönetimi için genellikle ayrı bir JS dosyası (`adminAuth.js`) kullanılır  
-ve bu dosya yalnızca yöneticiye özel işlemler için import edilir.
+Yönetici giriş ve oturum sistemi, tüm yönetici yetkisi gerektiren paneller, fonksiyonlar ve değişkenler ile bağlantılıdır.  
+Bu sistem; assets yönetimi, API anahtarı değişimi, uygulama ayarları, mapping işlemleri ve diğer tüm yönetici erişimi gerektiren modüller üzerinde aktiftir.  
+Giriş ve oturum bilgisi merkezi şekilde tutulur; ilgili JS dosyası (`adminAuth.js` gibi) tüm yönetici panellerinde import edilerek kullanılır.  
+Yalnızca oturumu geçerli yöneticiler hassas yönetimsel fonksiyonlara erişebilir; oturum sona erdiğinde veya geçersizse tekrar giriş istenir.
+
 
 ---
 
