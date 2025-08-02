@@ -1,28 +1,92 @@
-{
-  "manifest_version": 3,
-  "name": "Ajan Nil Chrome Uzantısı",
-  "version": "1.0.0",
-  "description": "WhatsApp Web için çok dilli akıllı asistan.",
-  "permissions": [
-    "storage", "activeTab", "scripting", "alarms"
-  ],
-  "host_permissions": [
-    "https://api.openai.com/*",
-    "https://web.whatsapp.com/*"
-  ],
-  "background": { "service_worker": "background.js", "type": "module" },
-  "action": {
-    "default_popup": "sidepanel.html",
-    "default_icon": {
-      "16": "assets/icon16.png",
-      "48": "assets/icon48.png",
-      "128": "assets/icon128.png"
-    }
-  },
-  "content_scripts": [
-    { "matches": ["https://web.whatsapp.com/*"], "js": ["content.js"] }
-  ],
-  "web_accessible_resources": [
-    { "resources": [ "sidepanel.html", "assets/*" ], "matches": [ "https://web.whatsapp.com/*" ] }
-  ]
-}
+diff --git a/manifest.json b/manifest.json
+index 1a066e16ae502be43dd65bab05010264fe6882a7..4ced0b9c25b185bb27691eb5b0460ad4c19225bc 100644
+--- a/manifest.json
++++ b/manifest.json
+@@ -1,28 +1,59 @@
+-{
+-  "manifest_version": 3,
+-  "name": "Ajan Nil Chrome Uzantısı",
+-  "version": "1.0.0",
+-  "description": "WhatsApp Web için çok dilli akıllı asistan.",
+-  "permissions": [
+-    "storage", "activeTab", "scripting", "alarms"
+-  ],
+-  "host_permissions": [
+-    "https://api.openai.com/*",
+-    "https://web.whatsapp.com/*"
+-  ],
+-  "background": { "service_worker": "background.js", "type": "module" },
+-  "action": {
+-    "default_popup": "sidepanel.html",
+-    "default_icon": {
+-      "16": "assets/icon16.png",
+-      "48": "assets/icon48.png",
+-      "128": "assets/icon128.png"
+-    }
+-  },
+-  "content_scripts": [
+-    { "matches": ["https://web.whatsapp.com/*"], "js": ["content.js"] }
+-  ],
+-  "web_accessible_resources": [
+-    { "resources": [ "sidepanel.html", "assets/*" ], "matches": [ "https://web.whatsapp.com/*" ] }
+-  ]
+-}
++{
++  "manifest_version": 3,
++  "name": "Ajan Nil Chrome Uzantısı",
++  "short_name": "Ajan Nil",
++  "version": "1.0.0",
++  "description": "WhatsApp Web için çok dilli akıllı asistan.",
++  "author": "Ajan Nil",
++  "permissions": [
++    "storage",
++    "activeTab",
++    "scripting",
++    "alarms",
++    "webRequest"
++  ],
++  "host_permissions": [
++    "https://api.openai.com/*",
++    "https://web.whatsapp.com/*"
++  ],
++  "background": {
++    "service_worker": "background.js",
++    "type": "module"
++  },
++  "action": {
++    "default_popup": "sidepanel.html",
++    "default_icon": {
++      "16": "assets/icon16.png",
++      "48": "assets/icon48.png",
++      "128": "assets/icon128.png"
++    }
++  },
++  "icons": {
++    "16": "assets/icon16.png",
++    "48": "assets/icon48.png",
++    "128": "assets/icon128.png"
++  },
++  "side_panel": {
++    "default_path": "sidepanel.html"
++  },
++  "content_scripts": [
++    {
++      "matches": ["https://web.whatsapp.com/*"],
++      "js": ["content.js"]
++    }
++  ],
++  "web_accessible_resources": [
++    {
++      "resources": ["sidepanel.html", "assets/*", "dist/*"],
++      "matches": ["https://web.whatsapp.com/*"]
++    }
++  ],
++  "commands": {
++    "toggle-assistant": {
++      "suggested_key": {
++        "default": "Alt+Shift+A"
++      },
++      "description": "Asistan panelini aç/kapat"
++    }
++  }
++}
