@@ -1,28 +1,60 @@
 {
   "manifest_version": 3,
   "name": "Ajan Nil Chrome Uzantısı",
+  "short_name": "Ajan Nil",
   "version": "1.0.0",
   "description": "WhatsApp Web için çok dilli akıllı asistan.",
+  "author": "Ajan Nil",
   "permissions": [
-    "storage", "activeTab", "scripting", "alarms"
+    "storage",
+    "activeTab",
+    "scripting",
+    "alarms",
+    "webRequest"
   ],
   "host_permissions": [
     "https://api.openai.com/*",
     "https://web.whatsapp.com/*"
   ],
-  "background": { "service_worker": "background.js", "type": "module" },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
   "action": {
-    "default_popup": "sidepanel.html",
+    "default_popup": "popup.html",
     "default_icon": {
-      "16": "assets/icon16.png",
-      "48": "assets/icon48.png",
-      "128": "assets/icon128.png"
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
     }
   },
+  "options_page": "options.html",
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
   "content_scripts": [
-    { "matches": ["https://web.whatsapp.com/*"], "js": ["content.js"] }
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["content.js"]
+    }
   ],
   "web_accessible_resources": [
-    { "resources": [ "sidepanel.html", "assets/*" ], "matches": [ "https://web.whatsapp.com/*" ] }
-  ]
+    {
+      "resources": ["sidepanel.html", "popup.html", "options.html", "assets/*", "dist/*", "styles/*", "locales/*"],
+      "matches": ["https://web.whatsapp.com/*"]
+    }
+  ],
+  "commands": {
+    "toggle-assistant": {
+      "suggested_key": {
+        "default": "Alt+Shift+A"
+      },
+      "description": "Asistan panelini aç/kapat"
+    }
+  }
 }

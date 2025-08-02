@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description" content="Ajan Nil ayarlar" />
+  <title data-i18n="optionsTitle">Ayarlar</title>
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/icon16.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/icon48.png" />
+  <link rel="icon" type="image/png" sizes="128x128" href="assets/icon128.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/light.css" />
+  <link rel="stylesheet" href="styles/dark.css" />
+  <link rel="stylesheet" href="styles/responsive.css" />
+  <link rel="stylesheet" href="styles/options.css" />
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+  <div id="options-root" class="p-4 space-y-4">
+    <h1 class="text-xl font-semibold" data-i18n="optionsTitle">Ayarlar</h1>
+
+    <div>
+      <label for="themeSelect" class="block mb-1" data-i18n="theme">Tema</label>
+      <select id="themeSelect" class="w-full p-2 border rounded bg-white dark:bg-gray-800">
+        <option value="light" data-i18n="light">Açık</option>
+        <option value="dark" data-i18n="dark">Koyu</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="panelWidth" class="block mb-1" data-i18n="panelWidth">Panel genişliği</label>
+      <input id="panelWidth" type="number" min="300" max="800" class="w-full p-2 border rounded bg-white dark:bg-gray-800" />
+    </div>
+
+    <div>
+      <label for="apiKeyInput" class="block mb-1" data-i18n="apiKey">API anahtarı</label>
+      <input id="apiKeyInput" type="password" class="w-full p-2 border rounded bg-white dark:bg-gray-800" />
+    </div>
+
+    <div>
+      <label for="assistantInput" class="block mb-1" data-i18n="assistant">Asistan ID</label>
+      <input id="assistantInput" type="text" class="w-full p-2 border rounded bg-white dark:bg-gray-800" />
+    </div>
+
+    <div>
+      <label for="modelSelect" class="block mb-1" data-i18n="model">Model</label>
+      <select id="modelSelect" class="w-full p-2 border rounded bg-white dark:bg-gray-800">
+        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+        <option value="gpt-4">GPT-4</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="langSelect" class="block mb-1" data-i18n="language">Dil</label>
+      <select id="langSelect" class="w-full p-2 border rounded bg-white dark:bg-gray-800">
+        <option value="tr">Türkçe</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="notifySelect" class="block mb-1" data-i18n="notification">Bildirim</label>
+      <select id="notifySelect" class="w-full p-2 border rounded bg-white dark:bg-gray-800">
+        <option value="popup" data-i18n="popup">Popup</option>
+        <option value="banner" data-i18n="banner">Banner</option>
+        <option value="silent" data-i18n="silent">Sessiz</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="uiFrameworkSelect" class="block mb-1" data-i18n="uiFramework">UI Framework</label>
+      <select id="uiFrameworkSelect" class="w-full p-2 border rounded bg-white dark:bg-gray-800"></select>
+    </div>
+
+    <div>
+      <label for="styleSystemSelect" class="block mb-1" data-i18n="styleSystem">Styling System</label>
+      <select id="styleSystemSelect" class="w-full p-2 border rounded bg-white dark:bg-gray-800"></select>
+    </div>
+
+    <div>
+      <label for="speechRecognitionSelect" class="block mb-1" data-i18n="speechRecognition">Speech Recognition</label>
+      <select id="speechRecognitionSelect" class="w-full p-2 border rounded bg-white dark:bg-gray-800"></select>
+    </div>
+
+    <div>
+      <label for="translationEngineSelect" class="block mb-1" data-i18n="translationEngine">Translation Engine</label>
+      <select id="translationEngineSelect" class="w-full p-2 border rounded bg-white dark:bg-gray-800"></select>
+    </div>
+
+    <div>
+      <label for="storageMethodSelect" class="block mb-1" data-i18n="storageMethod">Storage Method</label>
+      <select id="storageMethodSelect" class="w-full p-2 border rounded bg-white dark:bg-gray-800"></select>
+    </div>
+
+    <div>
+      <label for="bundlerSelect" class="block mb-1" data-i18n="bundler">Bundler</label>
+      <select id="bundlerSelect" class="w-full p-2 border rounded bg-white dark:bg-gray-800"></select>
+    </div>
+
+    <div>
+      <label for="fontSize" class="block mb-1" data-i18n="fontSize">Yazı boyutu</label>
+      <select id="fontSize" class="w-full p-2 border rounded bg-white dark:bg-gray-800">
+        <option value="sm" data-i18n="small">Küçük</option>
+        <option value="md" data-i18n="medium">Orta</option>
+        <option value="lg" data-i18n="large">Büyük</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="usageLimit" class="block mb-1" data-i18n="usageLimit">Kullanım limiti</label>
+      <input id="usageLimit" type="number" min="0" class="w-full p-2 border rounded bg-white dark:bg-gray-800" />
+    </div>
+
+    <div class="space-x-2">
+      <button id="saveBtn" class="px-4 py-2 bg-blue-600 text-white rounded" data-i18n="save">Kaydet</button>
+      <button id="resetBtn" class="px-4 py-2 bg-gray-500 text-white rounded" data-i18n="reset">Sıfırla</button>
+      <button id="clearHistory" class="px-4 py-2 bg-red-600 text-white rounded" data-i18n="clearHistory">Geçmişi Temizle</button>
+    </div>
+
+    <p id="versionInfo" class="text-xs text-gray-500"></p>
+  </div>
+  <script type="module" src="options.js"></script>
+</body>
+</html>

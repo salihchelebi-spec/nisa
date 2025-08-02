@@ -1,44 +1,126 @@
-importScripts('src/utils/constants.js', 'src/utils/storage.js');
+import { get, set, decryptText } from './utils/storage.js';
 
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-  if (request.action === "callApi") {
-    const { endpoint, payload, retries = 2 } = request.payload;
-    const { agentNilApiKey, agentNilApiKeyExpiration } = await get(["agentNilApiKey", "agentNilApiKeyExpiration"]);
-    if (!agentNilApiKey || (agentNilApiKeyExpiration && Date.now() > agentNilApiKeyExpiration)) {
-      sendResponse({ error: "API anahtarı yok veya süresi dolmuş." });
-      return true;
+const API_ALARM = 'agent-nil-api-check';
+const CHECK_INTERVAL_MINUTES = 60;
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function getApiKey() {
+  const { agentNilApiKey } = await get(['agentNilApiKey']);
+  if (!agentNilApiKey) {
+    return '';
+  }
+  try {
+    return await decryptText(agentNilApiKey);
+  } catch (e) {
+    console.error('API anahtarı çözülemedi', e);
+    return '';
+  }
+}
+
+async function checkApiKey() {
+  try {
+    const { agentNilApiKeyExpiration } = await get(['agentNilApiKeyExpiration']);
+    const apiKey = await getApiKey();
+    if (!apiKey || (agentNilApiKeyExpiration && Date.now() > agentNilApiKeyExpiration)) {
+      chrome.runtime.sendMessage({ type: 'notify', level: 'warning', message: 'API anahtarı yok veya süresi dolmuş.' });
     }
-    for (let i = 0; i <= retries; i++) {
-      try {
-        const response = await fetch(`https://api.openai.com/v1/${endpoint}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${agentNilApiKey}`,
-          },
-          body: JSON.stringify(payload),
-        });
-        const data = await response.json();
-        if (response.ok) {
-          sendResponse({ data });
-          return true;
-        } else {
-          throw new Error(data.error?.message || response.statusText);
-        }
-      } catch (err) {
-        if (i === retries) {
-          sendResponse({ error: err.message });
-        }
-        await new Promise(res => setTimeout(res, Math.pow(2, i) * 700));
+  } catch (e) {
+    console.error('API anahtar kontrolü başarısız', e);
+  }
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.alarms.create(API_ALARM, { periodInMinutes: CHECK_INTERVAL_MINUTES });
+  checkApiKey();
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  chrome.alarms.create(API_ALARM, { periodInMinutes: CHECK_INTERVAL_MINUTES });
+  checkApiKey();
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === API_ALARM) {
+    checkApiKey();
+  }
+});
+
+async function callApi({ endpoint, payload, retries = 2 }) {
+  const { usage = 0, usageLimit } = await get(['usage', 'usageLimit']);
+  const apiKey = await getApiKey();
+  if (!apiKey) {
+    throw new Error('API anahtarı yok veya geçersiz.');
+  }
+  if (usageLimit && usage >= usageLimit) {
+    throw new Error('API kullanım limiti aşıldı.');
+  }
+
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const res = await fetch(`https://api.openai.com/v1/${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error?.message || res.statusText);
       }
+      await set({ usage: usage + 1 });
+      return { data };
+    } catch (err) {
+      if (i === retries) {
+        throw err;
+      }
+      await sleep(2 ** i * 700);
     }
-    return true;
   }
-  if (request.action === "insertText") {
-    // Forward to content.js
-    chrome.tabs.sendMessage(sender.tab.id, { action: "insertText", text: request.payload.text }, resp => {
-      sendResponse(resp);
-    });
-    return true;
-  }
+}
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  (async () => {
+    try {
+      if (request.action === 'callApi') {
+        const result = await callApi(request.payload);
+        sendResponse(result);
+      } else if (request.action === 'insertText') {
+        chrome.tabs.sendMessage(
+          sender.tab.id,
+          { action: 'insertText', text: request.payload.text },
+          sendResponse,
+        );
+      } else if (request.action === 'broadcast') {
+        const tabs = await chrome.tabs.query({});
+        tabs.forEach((t) => chrome.tabs.sendMessage(t.id, request.payload));
+        sendResponse({ ok: true });
+      } else if (request.action === 'getStatus') {
+        const data = await get([
+          'usage',
+          'usageLimit',
+          'agentNilApiKeyExpiration',
+          'assistant',
+          'model',
+        ]);
+        sendResponse({
+          usage: data.usage || 0,
+          usageLimit: data.usageLimit,
+          expiration: data.agentNilApiKeyExpiration,
+          assistant: data.assistant,
+          model: data.model,
+        });
+      } else if (request.action === 'settingsUpdated') {
+        sendResponse({ ok: true });
+      } else {
+        sendResponse({ error: 'Bilinmeyen eylem' });
+      }
+    } catch (err) {
+      chrome.runtime.sendMessage({ type: 'notify', level: 'error', message: err.message });
+      sendResponse({ error: err.message });
+    }
+  })();
+  return true;
 });

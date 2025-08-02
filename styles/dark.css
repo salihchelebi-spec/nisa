@@ -1,0 +1,5 @@
+/* Dark theme overrides */
+[data-theme="dark"] {
+  --color-bg: #1f2937;
+  --color-text: #f9fafb;
+}

@@ -1,0 +1,43 @@
+/* Main stylesheet shared by side panel, popup and options */
+:root {
+  --font-family: 'Inter', sans-serif;
+  --color-bg: #ffffff;
+  --color-text: #1f2937;
+  --color-primary: #2563eb;
+  --color-success: #16a34a;
+  --color-error: #dc2626;
+  --color-warning: #f59e0b;
+  --radius-base: 4px;
+  --transition-base: 0.2s ease-in-out;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--color-bg);
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Notification styles */
+.notification {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-base);
+  margin-bottom: 0.5rem;
+  animation: fade-in 0.3s var(--transition-base);
+}
+
+.notification.success { background: var(--color-success); color: #fff; }
+.notification.error { background: var(--color-error); color: #fff; }
+.notification.warning { background: var(--color-warning); color: #fff; }
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 4px;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

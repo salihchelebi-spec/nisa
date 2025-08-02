@@ -1,13 +1,13 @@
 import React, { useState, useEffect, createContext, useCallback } from 'react';
-import * as storage from '../utils/storage';
-import { 
-  STORAGE_KEYS, 
-  DEFAULT_ASSISTANT_ID, 
-  DEFAULT_MODEL, 
+import * as storage from '../utils/storage.js';
+import {
+  STORAGE_KEYS,
+  DEFAULT_ASSISTANT_ID,
+  DEFAULT_MODEL,
   NOTIFICATION_TYPES,
-  ERROR_MESSAGES
-} from '../utils/constants';
-import LoadingSpinner from './LoadingSpinner'; // Örnek bir yükleme bileşeni
+  ERROR_MESSAGES,
+} from '../utils/constants.js';
+import LoadingSpinner from './LoadingSpinner.js'; // Örnek bir yükleme bileşeni
 
 // 1. Modüler Yapı: Dışa aktarılabilir bir Context nesnesi oluşturulur.
 export const AgentNilContext = createContext();

@@ -1,0 +1,6 @@
+/* Light theme overrides */
+[data-theme="light"],
+body:not([data-theme]) {
+  --color-bg: #ffffff;
+  --color-text: #1f2937;
+}
