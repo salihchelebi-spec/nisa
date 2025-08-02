@@ -364,36 +364,124 @@ content.js, sadece panel veya background.js’den gelen mesajları işler. Whats
 storage.js, background.js, options.js, popup.js ve tüm React/Svelte componentleri ile veri alışverişi yapar. Content.js ile doğrudan bağlantısı yoktur. Her ayar ve veri değişimi burada merkezi olarak yönetilir, diğer modüller ile veri alışverişi Messaging ve Storage API ile yapılır.
 
 ## 8. **components/** Klasörü için 30 Talimat
-1. Tüm arayüz (UI) modülleri ve mini uygulamalar burada tutulur.
-2. Her bileşen ayrı bir dosyada olmalı (örn: ChatPanel.js, Sidebar.js).
-3. Komponentler fonksiyonel veya class tabanlı olabilir.
-4. Kendi stil dosyasını içerebilir (örn: ChatPanel.css).
-5. Dil desteği için props ile locale verisi almalı.
-6. Her bileşen modüler ve bağımsız olmalıdır.
-7. Gerekli olduğunda global context (Provider) ile haberleşir.
-8. Bildirim, modal, spinner, dropdown gibi ortak elemanlar reusable tasarlanır.
-9. Sohbet, geçmiş, ayarlar, model yönetimi ve mikrofon butonu ayrı bileşenlerdir.
-10. Komponentler, props ile veri alıp, events ile veri gönderir.
-11. Ayar değişikliklerinde component re-render olmalıdır.
-12. Her yeni UI özelliği, bağımsız yeni bir bileşende eklenebilir.
-13. Test ve hata ayıklama için her birinde debug log desteği olmalıdır.
-14. Microcopy ve metinler locale’dan gelmeli, hardcoded olmamalıdır.
-15. API çağrısı gerektiğinde merkezi fonksiyon veya hook kullanmalı.
-16. Kendi içinde küçük helper fonksiyonlar içerebilir.
-17. Koyu/açık tema desteği component seviyesinde olmalıdır.
-18. Accessiblity (a11y) için gerekli etiket ve kısayollar eklenmelidir.
-19. UI durumlarına göre animasyon ve geçiş efektleri olabilir.
-20. Hatalı durumda kullanıcıya hata mesajı gösterilmelidir.
-21. Komponentlerin iç içe kullanımı kolay olmalıdır.
-22. Props ve State açıkça tanımlanmalı, gereksiz global değişken olmamalıdır.
-23. Kullanıcı aksiyonları (buton tıklama, seçim, mikrofon) kolayca işlenebilmelidir.
-24. Her component’in test edilebilir olması sağlanmalıdır.
-25. Kod okunabilirliği için isimlendirme standart olmalıdır.
-26. Büyük panel blokları (örn. ana chat paneli, ayarlar paneli) ana bileşen olarak ayrılmalıdır.
-27. Dosya yapısı gereksiz karmaşıklıktan kaçınmalı, gereksiz dosya açılmamalıdır.
-28. Bileşenlerin yaşam döngüsü (lifecycle) açık olmalı.
-29. Komponentler arası veri paylaşımı context veya props ile yapılmalıdır.
-30. Yeni UI/UX güncellemeleri kolayca adapte edilebilmelidir.
+## components/ Klasörü için Güncel ve Ayrıntılı Talimatlar
+
+### Amaç:
+Her ana işlev, görsel/etkileşimli UI elemanı, ayar veya mesaj yönetimi ayrı bir React component olarak modüler dosyada tutulur. Her bir component bağımsız, yeniden kullanılabilir, kolay test edilebilir ve erişilebilir olmalıdır.
+
+---
+
+### Ortak Kurallar
+1. **Her component tek dosyada** ve default export ile sunulmalıdır.
+2. **Props ile veri aktarımı** zorunlu, global state sadece Context veya Provider ile paylaşılır.
+3. **İsimlendirme**: Her component büyük harfle ve açıklayıcı olmalı (`ChatPanel`, `Dropdown` vb.).
+4. **Kendi stilini** Tailwind veya component bazlı CSS ile yönetmeli.
+5. **Erişilebilirlik (a11y)** için ARIA etiketleri, label’lar ve odak yönetimi sağlanmalıdır.
+6. **Debug ve test kolaylığı** için console.debug veya özel test id’leri eklenebilir.
+7. **Kullanılan yardımcı fonksiyonlar** utils/helpers klasöründen import edilir.
+8. **Yeniden kullanılabilirlik** önceliklidir; her component başka panelde, ayarda veya testte bağımsız çalışmalı.
+9. **Yerelleştirme (locale)** props olarak alınmalı, hardcoded metin olmamalı.
+10. **Her yeni component** önce index.js’ye export edilir.
+---
+
+### Bileşen Bazlı Teknik Talimatlar
+
+#### ChatPanel.js
+- Sohbet mesajlarını, giriş kutusunu ve model seçim dropdown’u içerir.
+- messages (array), onSend (fn), models (array), onModelChange (fn), locale (obj) props olarak alınır.
+- Her mesajı liste halinde gösterir; formdan yeni mesaj gönderimi ve input temizliği içerir.
+- Model seçimi opsiyoneldir ve ayrı Dropdown ile yapılır.
+- Koyu/açık tema uyumu ve responsive tasarım zorunludur.
+
+#### Dropdown.js
+- Tüm seçim menülerinde kullanılır; label, options, value, onChange props zorunlu.
+- Option array’i [{label, value}] şeklinde gelir.
+- Erişilebilirlik için ARIA label ekli olmalı.
+- Seçim değişikliğinde props.onChange çağrılır.
+- Tüm panellerde ve ayar sayfalarında yeniden kullanılabilir olmalı.
+
+#### HistoryPanel.js
+- Eski sohbet geçmişini (chats objesi), ve seçim olayını yönetir.
+- Her sohbet başlığı ve son mesajı, zaman damgası ile gösterir.
+- Boşsa “noHistory” locale ile bilgi döner.
+- onSelectChat fonksiyonu props ile alınır ve tıklanan id’yi döndürür.
+
+#### LoadingSpinner.js
+- Her async işlemi sırasında, durum göstergesi olarak kullanılır.
+- label props olarak alınır ve sadece aria/screen-reader için gösterilir.
+- SVG animasyonlu, minimalist ve temaya uyumlu olmalı.
+
+#### MicrophoneButton.js
+- Sesli komut/mikrofon başlatma/durdurma için tek tuşlu UI.
+- isRecording boolean ve onToggle fonksiyonu props olarak alınır.
+- locale objesinden metinler gelir; erişilebilirlik etiketi zorunlu.
+
+#### Modal.js
+- Onay, uyarı veya bilgi kutusu olarak kullanılır.
+- isOpen, title, message, confirmText, cancelText, onConfirm, onCancel props zorunlu.
+- Açıkken dialog/modal standartlarını ve odak yönetimini uygular.
+
+#### ModelManager.js
+- Tüm model seçimlerinde (GPT-4, GPT-3.5, vb.) tek tip arayüz.
+- models array, selected değer ve onSelect fonksiyonu props ile gelir.
+- models boşsa locale.noModels ile bilgi döner.
+
+#### Notification.js
+- Bilgilendirme, hata, başarı, uyarı mesajlarını gösterir.
+- message, type (info/success/warning/error), onClose props alınır.
+- Kapatma butonu isteğe bağlıdır, erişilebilirlik için aria-label eklenir.
+- Renk/tema tailwind ile yönetilir.
+
+#### SettingsPanel.js
+- Tüm ayar ve tema seçeneklerini (dropdown ile) yönetir.
+- settings objesi ve onChange fonksiyonu props ile alınır.
+- Tüm ayarlar, props veya global context ile güncellenebilir.
+- Tema, bildirim ve diğer opsiyonlar ayrı dropdown olarak gösterilir.
+
+#### index.js
+- Tüm component’ler bu dosyadan tek tek export edilir.
+- Her yeni component buraya eklenmeli.
+- Otomatik test ve import kolaylığı sağlar.
+
+---
+
+### Kod ve Klasör Yapısı Notları
+
+- Tüm component’ler components/ altında kendi dosyasında.
+- Ortak kullanımda olanlar ayrıca “shared/” veya “ui/” alt klasörüne taşınabilir.
+- component eklerken örnek kullanım (story/test), propTypes/TypeScript tipi veya jest testi eklenmesi önerilir.
+
+---
+
+### Bağlantılar
+- **components/**, UI’yı oluşturur ve tüm storage, helpers, locales ve styles klasörleriyle entegredir.
+- Veri ve ayar akışı her zaman props, context veya global state üzerinden olmalı.
+- Hiçbir component doğrudan storage.js ile veri yazmaz/okumaz, sadece event/prop ile tetikler.
+
+---
+
+## Kısa Özet
+> Her component **tekil, erişilebilir, test edilebilir, prop tabanlı ve tekrar kullanılabilir** olacak şekilde yazılır.  
+> Yeni eklenen veya güncellenen component için bu agent.md kuralları güncellenir.
+
+---
+---
+
+### Ek Teknik Standartlar ve Gelişmiş Uygulama Kuralları
+
+- Her component, kendi stil dosyasını (örn. `ChatPanel.css` veya `Component.module.css`) ekleyebilir; stil izolasyonu ve dışa sızmayı engelleyecek şekilde yapılandırılır.
+- Ayar veya props değişikliğiyle component’in güncel halini anında yansıtabilmesi için React re-render mantığı (örn. useState, useEffect, memo) net olarak uygulanmalı; gereksiz render’a dikkat edilmeli.
+- API veya veri çağrısı gerekiyorsa, doğrudan component içinde değil; merkezi bir hook, context veya yardımcı fonksiyon (`useApi`, `apiHelpers` gibi) üzerinden yapılmalı, kod tekrarına izin verilmemelidir.
+- Sadece o component’e özgü küçük yardımcı fonksiyonlar dosya içinde olabilir; ortak yardımcılar ve utility fonksiyonlar `utils/` veya `helpers/` klasöründe tutulmalı, gerektiğinde import edilmelidir.
+- Kullanıcı arayüzünde durumlara (yükleniyor, hata, geçişler) uygun animasyon ve efektler (örn. Tailwind CSS, Framer Motion, React Transition Group) ile sağlanmalı; kullanıcı deneyimi güçlendirilmelidir.
+- Props ve state tanımlamaları açık, okunabilir ve mümkünse PropTypes veya TypeScript ile belgelenmeli; gereksiz global değişkenlerden, belirsiz context bağımlılıklarından kaçınılmalıdır.
+- Her component bağımsız şekilde test edilebilir olmalı; unit veya integration testler (örn. Jest, React Testing Library) ile en az temel bir test eklenmeli ve testler güncel tutulmalıdır.
+- Ana panel ve büyük UI blokları (örn. ChatPanel, SettingsPanel, HistoryPanel) ana bileşen olarak ayrılmalı, fonksiyon ve görünürlük bakımından alt bileşenlere bölünebilir yapı tasarlanmalıdır.
+- Component’lerin yaşam döngüsü açık şekilde kontrol edilmeli; mount, update ve unmount (örn. event listener, timer, subscription) işlemlerinde cleanup doğru şekilde uygulanmalıdır.
+
+---
+
+
 **Bağlantı ve iletişim:**
 components/ tüm ana arayüzdür ve storage.js ile veri alışverişi yapar. Context Provider ile global state yönetir. background.js ve popup.js’den veri okuyabilir, options.js ile tüm ayarları paylaşır. Locales/ ile çeviri metinlerini, styles/ ile CSS’i yükler. Content.js ile doğrudan bağlantısı yoktur.
 ---
@@ -428,6 +516,37 @@ components/ tüm ana arayüzdür ve storage.js ile veri alışverişi yapar. Con
 28. Temel ikon ve bayrak görselleri ile uyumlu class’lar sağlanmalıdır.
 29. Dokunmatik cihazlarda kolay kullanım için padding ve boyutlar optimize edilmelidir.
 30. Panelin görsel bütünlüğü için style guide’a uygun olunmalıdır.
+
+---
+
+### styles/ Klasörü: Dosya Yapısı ve Modülerlik Standartları
+
+- **Her büyük UI fonksiyonu için** (ör. panel, popup, options, modal, badge) ayrı bir stil dosyası (örn. `panel.css`, `popup.css`, `modal.css`) oluşturulmalıdır.
+- **Her React component** için, isterse kendi özel stil dosyasını (örn. `ChatPanel.module.css`, `Notification.module.scss`) styles/ altında veya ilgili component dizininde barındırabilir.
+- **Ana tema ve varyantlar** (ör. `light.css`, `dark.css`, `high-contrast.css`) ayrı dosyalarda tutulmalı; bunlara override ve değişiklik kolay olmalıdır.
+- **Global değişkenler, utility class’lar ve mixin’ler** (`variables.css`, `utils.scss`) ayrı dosyada yönetilmelidir.
+- **Platform ve cihaz uyumluluğu** için farklı breakpoint/medya sorgusu dosyaları (`responsive.css`), platform bazlı override dosyaları (örn. `win.css`, `mac.css`) eklenebilir.
+- **Animasyon ve keyframe tanımları** (`animations.css`) ayrı bir dosyada gruplanabilir.
+- **Tüm stiller** ana `main.css` veya `index.css` dosyasından merkezi olarak import edilmelidir.
+- Gereksiz şişirme ve tekrar eden kod önlenmeli; sadece gerekli olan stiller, component’te veya globalde import edilmeli.
+- Dosya isimlendirmeleri işlevi açıkça göstermeli, örneğin: `Badge.css`, `SidebarTheme.scss`, `Alert.module.css`.
+**Bağlantı ve iletişim:**
+styles/ doğrudan HTML ve React/Svelte bileşenlerinde kullanılır. Sidepanel.html, popup.html, options.html dosyaları ile birlikte yüklenir. components/ klasörüyle sıkı entegrasyon sağlar. Doğrudan scriptlerle (content.js, background.js) bağlantısı yoktur.
+---
+
+> **NOT:**  
+> Otomatik veya manuel kod üreten (Codex, ChatGPT, Copilot vs.) tüm sistemler,  
+> styles/ klasöründe component sayısına ve fonksiyonuna göre yeni dosya yaratabilir.  
+> Hangi component, hangi stil dosyasına ihtiyaç duyuyorsa,  
+> agent.md’de belirtilen standart ve isimlendirme kurallarına uygun şekilde eklenmelidir.
+
+---
+
+### Sonuç
+- **Tek bir dosya yetmez:** Modern ve ölçeklenebilir sistem için çoklu, tematik, fonksiyonel CSS/SCSS/Tailwind dosyası zorunludur.
+- **AI ve takım üyeleri** styles/ klasöründe yeni dosya yaratırken  
+  *agent.md*’deki kuralları referans almalı,  
+  isimlendirme, modülerlik ve işlev bütünlüğüne dikkat etmelidir.
 **Bağlantı ve iletişim:**
 styles/ doğrudan HTML ve React/Svelte bileşenlerinde kullanılır. Sidepanel.html, popup.html, options.html dosyaları ile birlikte yüklenir. components/ klasörüyle sıkı entegrasyon sağlar. Doğrudan scriptlerle (content.js, background.js) bağlantısı yoktur.
 ---
