@@ -39,14 +39,29 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://web.whatsapp.com/*"],
-      "js": ["content.js"]
+      "matches": [
+        "https://web.whatsapp.com/*"
+      ],
+      "js": [
+        "content.js"
+      ]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["sidepanel.html", "popup.html", "options.html", "assets/*", "dist/*", "styles/*", "locales/*"],
-      "matches": ["https://web.whatsapp.com/*"]
+      "resources": [
+        "sidepanel.html",
+        "popup.html",
+        "options.html",
+        "index.js",
+        "assets/*",
+        "dist/*",
+        "styles/*",
+        "locales/*"
+      ],
+      "matches": [
+        "https://web.whatsapp.com/*"
+      ]
     }
   ],
   "commands": {

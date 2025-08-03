@@ -1,3 +1,4 @@
+
 // Content script for WhatsApp Web integration
 // Listens for extension messages and injects text into the chat box
 

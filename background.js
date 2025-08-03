@@ -1,4 +1,4 @@
-import { get, set, decryptText } from './utils/storage.js';
+import { decryptText, get, set } from './utils/storage.js';
 
 const API_ALARM = 'agent-nil-api-check';
 const CHECK_INTERVAL_MINUTES = 60;
@@ -23,7 +23,7 @@ async function checkApiKey() {
     const { agentNilApiKeyExpiration } = await get(['agentNilApiKeyExpiration']);
     const apiKey = await getApiKey();
     if (!apiKey || (agentNilApiKeyExpiration && Date.now() > agentNilApiKeyExpiration)) {
-      chrome.runtime.sendMessage({ type: 'notify', level: 'warning', message: 'API anahtarı yok veya süresi dolmuş.' });
+      console.warn('API anahtarı yok veya süresi dolmuş.');
     }
   } catch (e) {
     console.error('API anahtar kontrolü başarısız', e);
@@ -88,11 +88,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const result = await callApi(request.payload);
         sendResponse(result);
       } else if (request.action === 'insertText') {
-        chrome.tabs.sendMessage(
-          sender.tab.id,
-          { action: 'insertText', text: request.payload.text },
-          sendResponse,
-        );
+        if (sender.tab && sender.tab.id) {
+          chrome.tabs.sendMessage(
+            sender.tab.id,
+            { action: 'insertText', text: request.payload.text },
+            (response) => {
+              if (chrome.runtime.lastError) {
+                sendResponse({ error: 'Yan panel veya içerik scripti bu sekmede yüklü değil.' });
+              } else {
+                sendResponse(response);
+              }
+            }
+          );
+        } else {
+          sendResponse({ error: 'Tab bulunamadı.' });
+        }
       } else if (request.action === 'broadcast') {
         const tabs = await chrome.tabs.query({});
         tabs.forEach((t) => chrome.tabs.sendMessage(t.id, request.payload));
@@ -112,13 +122,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           assistant: data.assistant,
           model: data.model,
         });
+      } else if (request.action === 'openSidePanel') {
+        const tab = request.payload && request.payload.tab ? `#tab=${request.payload.tab}` : '';
+        const url = chrome.runtime.getURL(`sidepanel.html${tab}`);
+        if (chrome.sidePanel && chrome.sidePanel.open) {
+          await chrome.sidePanel.open({ url });
+        } else {
+          await chrome.tabs.create({ url });
+        }
+        sendResponse({ ok: true });
       } else if (request.action === 'settingsUpdated') {
         sendResponse({ ok: true });
       } else {
         sendResponse({ error: 'Bilinmeyen eylem' });
       }
     } catch (err) {
-      chrome.runtime.sendMessage({ type: 'notify', level: 'error', message: err.message });
       sendResponse({ error: err.message });
     }
   })();

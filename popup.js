@@ -1,3 +1,4 @@
+
 import { get, set, encryptText, decryptText } from './utils/storage.js';
 import { sendMessage, addMessageListener } from './utils/messaging.js';
 import { applyTheme } from './utils/theme.js';
@@ -90,11 +91,7 @@ document.getElementById('saveKey').addEventListener('click', async () => {
 });
 
 document.getElementById('openPanel').addEventListener('click', () => {
-  if (chrome.sidePanel && chrome.sidePanel.open) {
-    chrome.sidePanel.open({});
-  } else {
-    chrome.tabs.create({ url: chrome.runtime.getURL('sidepanel.html') });
-  }
+  sendMessage({ action: 'openSidePanel', payload: { tab: 'messaging' } });
 });
 
 document.getElementById('openSettings').addEventListener('click', () => {
